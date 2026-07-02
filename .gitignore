@@ -1,0 +1,18 @@
+# dependencias
+node_modules/
+
+# build
+.next/
+out/
+
+# variables de entorno (NUNCA subir esto al repo)
+.env
+.env.local
+.env*.local
+
+# varios
+.DS_Store
+*.log
+
+# Claude Code (memoria local del asistente)
+.claude/

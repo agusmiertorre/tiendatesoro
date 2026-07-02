@@ -1,0 +1,326 @@
+/* =========================================================================
+   TESORO ESTUDIO — TIENDA
+   Misma identidad visual que tesoroestudio.ar:
+   porcelana cálida + esmeralda profundo + oro antiguo
+   ========================================================================= */
+
+:root {
+  --bg: #faf6ef;
+  --surface: #f1eadd;
+  --surface-2: #ebe2d2;
+  --ink: #1c1a16;
+  --ink-soft: #3a342c;
+  --muted: #6f665a;
+  --brand: #1e3d32;
+  --brand-2: #2e5848;
+  --brand-ink: #16261f;
+  --gold: #bf9b30;
+  --gold-deep: #9e7e1e;
+  --line: #e3d9c8;
+  --cream: #faf6ef;
+
+  --shadow-sm: 0 2px 10px rgba(28, 26, 22, 0.06);
+  --shadow-md: 0 18px 50px -22px rgba(28, 26, 22, 0.35);
+  --shadow-lg: 0 40px 90px -40px rgba(22, 38, 31, 0.55);
+
+  --maxw: 1200px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --radius: 14px;
+  --radius-lg: 22px;
+
+  --ff-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --ff-body: "Mulish", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--ff-body);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--ff-display);
+  font-weight: 480;
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  color: var(--brand-ink);
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ------------------------------ Layout ---------------------------------- */
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.topbar {
+  background: var(--brand);
+  color: var(--cream);
+  padding: 22px 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.topbar .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  font-family: var(--ff-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.01em;
+  color: var(--cream);
+}
+
+.brand .gold {
+  color: var(--gold);
+}
+
+.cart-toggle {
+  background: var(--gold);
+  color: var(--brand-ink);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: transform 0.15s var(--ease);
+}
+
+.cart-toggle:hover {
+  transform: translateY(-1px);
+}
+
+/* --------------------------- Product grid -------------------------------- */
+.catalog {
+  padding: 48px 0 96px;
+}
+
+.catalog h1 {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  margin-bottom: 8px;
+}
+
+.catalog .subtitle {
+  color: var(--muted);
+  margin-bottom: 36px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.card-img {
+  aspect-ratio: 4 / 3;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.card-body {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.card-body h3 {
+  font-size: 1.15rem;
+}
+
+.card-body .desc {
+  color: var(--muted);
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.card-body .price {
+  font-family: var(--ff-display);
+  font-size: 1.3rem;
+  color: var(--brand);
+  margin-top: 6px;
+}
+
+.add-btn {
+  margin-top: 10px;
+  background: var(--brand);
+  color: var(--cream);
+  border: none;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: background 0.15s var(--ease);
+}
+
+.add-btn:hover {
+  background: var(--brand-2);
+}
+
+.add-btn:disabled {
+  background: var(--line);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+/* -------------------------------- Cart ----------------------------------- */
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 38, 31, 0.45);
+  z-index: 40;
+}
+
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(420px, 100%);
+  background: var(--cream);
+  box-shadow: var(--shadow-lg);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+}
+
+.cart-drawer h2 {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+}
+
+.cart-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--muted);
+}
+
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+
+.cart-item .name {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.cart-item .qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.qty-controls button {
+  background: var(--surface-2);
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+.cart-empty {
+  color: var(--muted);
+  text-align: center;
+  margin-top: 40px;
+}
+
+.cart-footer {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 18px;
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--ff-display);
+  font-size: 1.3rem;
+  color: var(--brand);
+  margin-bottom: 16px;
+}
+
+.checkout-btn {
+  width: 100%;
+  background: var(--gold);
+  color: var(--brand-ink);
+  border: none;
+  border-radius: 999px;
+  padding: 14px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.checkout-btn:disabled {
+  background: var(--line);
+  color: var(--muted);
+}
+
+.state-msg {
+  color: var(--muted);
+  padding: 40px 0;
+  text-align: center;
+}
