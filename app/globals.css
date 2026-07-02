@@ -195,6 +195,7 @@ button {
   padding: 10px 16px;
   font-weight: 700;
   font-size: 0.9rem;
+  width: 100%;
   transition: background 0.15s var(--ease);
 }
 
@@ -202,10 +203,68 @@ button {
   background: var(--brand-2);
 }
 
-.add-btn:disabled {
+.add-btn--disabled {
+  margin-top: 10px;
   background: var(--line);
   color: var(--muted);
-  cursor: not-allowed;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  width: 100%;
+  text-align: center;
+}
+
+/* Controles +/- en la card del producto */
+.qty-row {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  border: 2px solid var(--brand);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.qty-btn {
+  background: none;
+  border: none;
+  width: 42px;
+  height: 40px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--brand);
+  flex-shrink: 0;
+  transition: background 0.12s;
+}
+
+.qty-btn:hover {
+  background: var(--surface-2);
+}
+
+.qty-num {
+  flex: 1;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--brand);
+  border-left: 1.5px solid var(--line);
+  border-right: 1.5px solid var(--line);
+  line-height: 40px;
+}
+
+/* Badge en el botón del carrito */
+.cart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand);
+  color: var(--cream);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 6px;
 }
 
 /* -------------------------------- Cart ----------------------------------- */

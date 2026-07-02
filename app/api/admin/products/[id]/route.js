@@ -16,7 +16,7 @@ export async function GET(_request, { params }) {
 // PUT /api/admin/products/[id]
 export async function PUT(request, { params }) {
   const body = await request.json()
-  const { nombre, descripcion, precio, stock, imagen_url, categoria, activo } = body
+  const { nombre, descripcion, precio, stock, stock_infinito, imagen_url, categoria, activo } = body
 
   const { data, error } = await supabaseAdmin
     .from('products')
@@ -25,6 +25,7 @@ export async function PUT(request, { params }) {
       descripcion: descripcion ?? '',
       precio: Number(precio),
       stock: Number(stock),
+      stock_infinito: stock_infinito === true,
       imagen_url: imagen_url || null,
       categoria: categoria || null,
       activo,

@@ -53,7 +53,7 @@ export default function EditarProducto() {
       body: JSON.stringify({
         ...form,
         precio: Number(form.precio),
-        stock: Number(form.stock),
+        stock: form.stock_infinito ? 0 : Number(form.stock),
       }),
     })
 
@@ -114,23 +114,38 @@ export default function EditarProducto() {
           />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div className="form-group">
+          <label htmlFor="precio">Precio (ARS) *</label>
+          <input
+            id="precio"
+            className="form-input"
+            name="precio"
+            type="number"
+            min="0"
+            step="0.01"
+            value={form.precio}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <input
+            type="checkbox"
+            id="stock_infinito"
+            name="stock_infinito"
+            checked={form.stock_infinito || false}
+            onChange={handleChange}
+            style={{ width: 18, height: 18, accentColor: 'var(--brand)', flexShrink: 0 }}
+          />
+          <label htmlFor="stock_infinito" style={{ cursor: 'pointer' }}>
+            Stock infinito (no limitar cantidad)
+          </label>
+        </div>
+
+        {!form.stock_infinito && (
           <div className="form-group">
-            <label htmlFor="precio">Precio (ARS) *</label>
-            <input
-              id="precio"
-              className="form-input"
-              name="precio"
-              type="number"
-              min="0"
-              step="0.01"
-              value={form.precio}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="stock">Stock</label>
+            <label htmlFor="stock">Stock disponible</label>
             <input
               id="stock"
               className="form-input"
@@ -141,7 +156,7 @@ export default function EditarProducto() {
               onChange={handleChange}
             />
           </div>
-        </div>
+        )}
 
         <div className="form-group">
           <label htmlFor="categoria">Categoría</label>

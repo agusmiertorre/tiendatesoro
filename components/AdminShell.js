@@ -31,6 +31,12 @@ export default function AdminShell({ children }) {
           >
             Pedidos
           </Link>
+          <Link
+            href="/admin/instituciones"
+            className={pathname.startsWith('/admin/instituciones') ? 'active' : ''}
+          >
+            Instituciones
+          </Link>
         </nav>
       </aside>
 

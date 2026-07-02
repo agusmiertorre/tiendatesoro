@@ -15,7 +15,7 @@ export async function GET() {
 // POST /api/admin/products — crea un producto nuevo
 export async function POST(request) {
   const body = await request.json()
-  const { nombre, descripcion, precio, stock, imagen_url, categoria, activo } = body
+  const { nombre, descripcion, precio, stock, stock_infinito, imagen_url, categoria, activo } = body
 
   if (!nombre || precio == null) {
     return NextResponse.json({ error: 'nombre y precio son obligatorios' }, { status: 400 })
@@ -28,6 +28,7 @@ export async function POST(request) {
       descripcion: descripcion || '',
       precio: Number(precio),
       stock: Number(stock ?? 0),
+      stock_infinito: stock_infinito === true,
       imagen_url: imagen_url || null,
       categoria: categoria || null,
       activo: activo !== false,

@@ -86,7 +86,7 @@ export default function AdminProductos() {
                   <td style={{ fontWeight: 600 }}>{p.nombre}</td>
                   <td style={{ color: 'var(--muted)' }}>{p.categoria || '—'}</td>
                   <td>{formatPrice(p.precio)}</td>
-                  <td>{p.stock}</td>
+                  <td>{p.stock_infinito ? '∞' : p.stock}</td>
                   <td>
                     <span className={`badge ${p.activo ? 'badge-green' : 'badge-gray'}`}>
                       {p.activo ? 'Activo' : 'Inactivo'}
