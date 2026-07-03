@@ -178,7 +178,7 @@ export default function Tienda() {
         </div>
       </header>
 
-      <main className="catalog">
+      <main className="catalog" style={{ minHeight: 'calc(100vh - 140px)' }}>
         <div className="wrap">
           <h1>Nuestros productos</h1>
           <p className="subtitle">Elegí las fotos y packs que querés para tu pedido.</p>
@@ -229,6 +229,15 @@ export default function Tienda() {
           )}
         </div>
       </main>
+
+      <footer style={{ textAlign: 'center', padding: '24px 0 16px', borderTop: '1px solid var(--line)' }}>
+        <a
+          href="/admin/login"
+          style={{ fontSize: '0.75rem', color: 'var(--line)', textDecoration: 'none' }}
+        >
+          admin
+        </a>
+      </footer>
 
       {cartOpen && (
         <>
