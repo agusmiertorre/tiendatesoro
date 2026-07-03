@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 
 const CART_KEY = 'tesoro_cart_v1';
+const BUYER_KEY = 'tesoro_buyer_v1';
+const INST_KEY = 'tesoro_inst_v1';
 
 function formatPrice(n) {
   return new Intl.NumberFormat('es-AR', {
@@ -39,6 +41,22 @@ export default function Tienda() {
   const [instituciones, setInstituciones] = useState([]);
   const [selectedInstId, setSelectedInstId] = useState('');
   const [selectedNivel, setSelectedNivel] = useState('');
+
+  // Restaurar buyer e institución seleccionada desde localStorage
+  useEffect(() => {
+    const savedBuyer = localStorage.getItem(BUYER_KEY);
+    const savedInst = localStorage.getItem(INST_KEY);
+    if (savedBuyer) {
+      try { setBuyer(JSON.parse(savedBuyer)); } catch {}
+    }
+    if (savedInst) {
+      try {
+        const { instId, nivel } = JSON.parse(savedInst);
+        if (instId) setSelectedInstId(instId);
+        if (nivel) setSelectedNivel(nivel);
+      } catch {}
+    }
+  }, []);
 
   useEffect(() => {
     fetch('/api/products')
@@ -94,7 +112,11 @@ export default function Tienda() {
 
   function handleBuyerChange(e) {
     const { name, value } = e.target;
-    setBuyer((p) => ({ ...p, [name]: value }));
+    setBuyer((p) => {
+      const next = { ...p, [name]: value };
+      localStorage.setItem(BUYER_KEY, JSON.stringify(next));
+      return next;
+    });
   }
 
   // Datos derivados para los selects en cascada
@@ -108,12 +130,23 @@ export default function Tienda() {
     const inst = instituciones.find((i) => i.id === id);
     setSelectedInstId(id);
     setSelectedNivel('');
-    setBuyer((p) => ({ ...p, institucion: inst?.nombre || '', grado_anio: '' }));
+    localStorage.setItem(INST_KEY, JSON.stringify({ instId: id, nivel: '' }));
+    setBuyer((p) => {
+      const next = { ...p, institucion: inst?.nombre || '', grado_anio: '' };
+      localStorage.setItem(BUYER_KEY, JSON.stringify(next));
+      return next;
+    });
   }
 
   function handleNivelChange(e) {
-    setSelectedNivel(e.target.value);
-    setBuyer((p) => ({ ...p, grado_anio: '' }));
+    const nivel = e.target.value;
+    setSelectedNivel(nivel);
+    localStorage.setItem(INST_KEY, JSON.stringify({ instId: selectedInstId, nivel }));
+    setBuyer((p) => {
+      const next = { ...p, grado_anio: '' };
+      localStorage.setItem(BUYER_KEY, JSON.stringify(next));
+      return next;
+    });
   }
 
   function handleDivisionChange(e) {
@@ -151,6 +184,8 @@ export default function Tienda() {
     }
 
     setCart({});
+    localStorage.removeItem(BUYER_KEY);
+    localStorage.removeItem(INST_KEY);
     window.location.href = data.init_point;
   }
 
