@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '../../../lib/supabaseClient';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/products
 // Usa el cliente público (anon key). Como RLS solo deja leer productos
 // con activo = true, no hace falta filtrar acá — pero lo dejamos explícito
@@ -8,7 +10,7 @@ import { supabase } from '../../../lib/supabaseClient';
 export async function GET() {
   const { data, error } = await supabase
     .from('products')
-    .select('id, nombre, descripcion, precio, stock, imagen_url, categoria')
+    .select('id, nombre, descripcion, precio, stock, stock_infinito, imagen_url, categoria')
     .eq('activo', true)
     .order('created_at', { ascending: true });
 
