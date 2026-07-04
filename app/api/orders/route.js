@@ -7,14 +7,10 @@ const mpClient = new MercadoPagoConfig({
 })
 
 const REQUIRED_BUYER = [
-  'nombre', 'apellido', 'dni',
+  'nombre', 'apellido', 'dni', 'email',
   'institucion', 'alumno_nombre', 'alumno_apellido',
 ]
 
-// POST /api/orders
-// Recibe { buyer, items: [{ product_id, cantidad }] }
-// Recalcula el total contra precios reales, valida stock,
-// crea la orden en Supabase y la preferencia en Mercado Pago.
 export async function POST(request) {
   const body = await request.json()
   const { buyer, items } = body
@@ -37,7 +33,7 @@ export async function POST(request) {
   const productIds = [...new Set(items.map((i) => i.product_id))]
   const { data: products, error: prodError } = await supabaseAdmin
     .from('products')
-    .select('id, nombre, precio, stock, activo')
+    .select('id, nombre, precio, stock, stock_infinito, activo')
     .in('id', productIds)
 
   if (prodError) {
@@ -82,6 +78,7 @@ export async function POST(request) {
       nombre: buyer.nombre.trim(),
       apellido: buyer.apellido.trim(),
       dni: buyer.dni.trim(),
+      email: buyer.email.trim().toLowerCase(),
       institucion: buyer.institucion.trim(),
       grado_anio: buyer.grado_anio?.trim() || null,
       alumno_nombre: buyer.alumno_nombre.trim(),
@@ -117,7 +114,6 @@ export async function POST(request) {
 
   // --- Crear preferencia de Mercado Pago ---
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-  // MP_SANDBOX=false solo en producción con credenciales reales
   const isSandbox = process.env.MP_SANDBOX !== 'false'
 
   let preference
@@ -135,12 +131,13 @@ export async function POST(request) {
         payer: {
           name: buyer.nombre,
           surname: buyer.apellido,
+          email: buyer.email.trim().toLowerCase(),
         },
         external_reference: order.id,
         back_urls: {
-          success: `${baseUrl}/gracias?status=approved`,
-          failure: `${baseUrl}/gracias?status=failure`,
-          pending: `${baseUrl}/gracias?status=pending`,
+          success: `${baseUrl}/?paid=approved&order=${order.id}`,
+          failure: `${baseUrl}/?paid=failure&order=${order.id}`,
+          pending: `${baseUrl}/?paid=pending&order=${order.id}`,
         },
         ...(baseUrl && !baseUrl.includes('localhost') && { auto_return: 'approved' }),
         notification_url: `${baseUrl}/api/mp-webhook`,
@@ -148,14 +145,12 @@ export async function POST(request) {
     })
   } catch (err) {
     console.error('Error creando preferencia MP:', err)
-    // No borramos la orden — queda en pending, se puede reintentar
     return NextResponse.json(
       { error: 'Error al iniciar el pago. Intentá de nuevo.' },
       { status: 500 }
     )
   }
 
-  // --- Guardar preference_id en la orden ---
   await supabaseAdmin
     .from('orders')
     .update({ mp_preference_id: preference.id })

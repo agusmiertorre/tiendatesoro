@@ -18,6 +18,7 @@ const EMPTY_BUYER = {
   nombre: '',
   apellido: '',
   dni: '',
+  email: '',
   institucion: '',
   grado_anio: '',
   alumno_nombre: '',
@@ -30,6 +31,7 @@ export default function Tienda() {
   const [error, setError] = useState(null);
   const [cart, setCart] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState(null); // 'approved' | 'failure' | 'pending' | null
 
   // Checkout
   const [step, setStep] = useState('cart'); // 'cart' | 'checkout'
@@ -55,6 +57,17 @@ export default function Tienda() {
         if (instId) setSelectedInstId(instId);
         if (nivel) setSelectedNivel(nivel);
       } catch {}
+    }
+  }, []);
+
+  // Detectar retorno desde MercadoPago
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const paid = params.get('paid');
+    if (paid) {
+      setPaymentStatus(paid);
+      // Limpiar la URL sin recargar
+      window.history.replaceState({}, '', '/');
     }
   }, []);
 
@@ -213,6 +226,30 @@ export default function Tienda() {
         </div>
       </header>
 
+      {paymentStatus && (
+        <div style={{
+          background: paymentStatus === 'approved' ? '#d1fae5' : paymentStatus === 'failure' ? '#fee2e2' : '#fef3c7',
+          color: paymentStatus === 'approved' ? '#065f46' : paymentStatus === 'failure' ? '#991b1b' : '#92400e',
+          padding: '16px 24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+        }}>
+          <span style={{ fontWeight: 600 }}>
+            {paymentStatus === 'approved' && '✓ ¡Pago confirmado! Tu pedido está en camino.'}
+            {paymentStatus === 'failure' && '✕ El pago no se completó. Podés intentarlo de nuevo.'}
+            {paymentStatus === 'pending' && '⏳ Tu pago está siendo procesado. Te avisamos cuando se confirme.'}
+          </span>
+          <button
+            onClick={() => setPaymentStatus(null)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: 'inherit', opacity: 0.6 }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       <main className="catalog" style={{ minHeight: 'calc(100vh - 140px)' }}>
         <div className="wrap">
           <h1>Nuestros productos</h1>
@@ -357,6 +394,11 @@ export default function Tienda() {
                     <div className="form-group">
                       <label>DNI *</label>
                       <input className="form-input" name="dni" value={buyer.dni} onChange={handleBuyerChange} required />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Email *</label>
+                      <input className="form-input" name="email" type="email" value={buyer.email} onChange={handleBuyerChange} placeholder="para enviarte el comprobante" required />
                     </div>
 
                     {/* Institución */}
